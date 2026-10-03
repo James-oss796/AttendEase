@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const pool = require("./db");
 
 const app = express();
 
@@ -10,6 +11,24 @@ app.get("/", (req, res) => {
     res.json({
         message: "AttendEase API is running"
     });
+});
+
+
+app.get("/api/test-db", async(req, res) => {
+    try{
+        const result = await pool.query("SELECT NOW()");
+
+        res.status(200).json({
+            message: "Database connection successful",
+            time: result.rows[0].now
+        });
+    } catch(error){
+        console.error(error);
+
+        res.status(500).json({
+            message:"Database connection failed"
+        });
+    }
 });
 
 const PORT = 5000;
